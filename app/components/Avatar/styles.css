@@ -1,0 +1,15 @@
+.avatar__container {
+  display: flex;
+  align-items: center;
+}
+
+.avatar__picture {
+  height: 3em;
+  width: 3em;
+  border-radius: 100%;
+  margin-right: 1rem;
+}
+
+.avatar__name {
+  font-weight: 700;
+}

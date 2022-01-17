@@ -1,0 +1,10 @@
+{
+  "name": "Remix Blog",
+  "description": "Simple blog website built with Remix and DatoCMS",
+  "previewImage": "https://www.datocms-assets.com/205/1605198221-screenshot2020-11-12-next-js-blog-example-with-datocms-1.jpg?crop=top&fit=crop&h=500&w=600&auto=format",
+  "datocmsProjectId": "23796",
+  "deploymentType": "static",
+  "buildCommand": "npm run build",
+  "datocmsApiTokenEnvName": "DATOCMS_READONLY_TOKEN",
+  "livePreviewUrl": "https://nextjs-demo-bay.vercel.app/"
+}

@@ -6,8 +6,7 @@ import { request } from "~/lib/datocms";
 import { responsiveImageFragment, metaTagsFragment } from "~/lib/fragments";
 import { Avatar, links as avatarLinks } from "~/components/Avatar";
 import { Date, links as dateLinks } from "~/components/Date";
-import { StructuredText } from "react-datocms";
-import { renderMetaTags } from "react-datocms";
+import { StructuredText, Image } from "react-datocms";
 
 export function links() {
   return [
@@ -128,12 +127,7 @@ export default function PostSlug() {
       <section className="section">
         <Avatar name={post.author.name} picture={post.author.picture} />
       </section>
-      <img
-        className="grid__image"
-        srcset={post.coverImage.responsiveImage.srcSet}
-        sizes={post.coverImage.responsiveImage.sizes}
-        src={post.coverImage.responsiveImage.src}
-      />
+      <Image className="grid__image" data={post.coverImage.responsiveImage} />
       <section className="section--narrow">
         <Date dateString={post.date} />
       </section>
@@ -144,11 +138,9 @@ export default function PostSlug() {
             renderBlock={({ record }) => {
               if (record.__typename === "ImageBlockRecord") {
                 return (
-                  <img
+                  <Image
                     className="grid__image"
-                    srcset={record.image.responsiveImage.srcSet}
-                    sizes={record.image.responsiveImage.sizes}
-                    src={record.image.responsiveImage.src}
+                    data={record.image.responsiveImage}
                   />
                 );
               }
@@ -170,11 +162,9 @@ export default function PostSlug() {
             <li key={post.slug} className="grid__item">
               <Link to={`/posts/${post.slug}`} className="grid__link">
                 <div>
-                  <img
+                  <Image
                     className="grid__image"
-                    srcset={post.coverImage.responsiveImage.srcSet}
-                    sizes={post.coverImage.responsiveImage.sizes}
-                    src={post.coverImage.responsiveImage.src}
+                    data={post.coverImage.responsiveImage}
                   />
                   <p className="grid__title">{post.title}</p>
                   <Date dateString={post.date} />

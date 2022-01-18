@@ -2,6 +2,7 @@ import { Link } from "remix";
 import { useLoaderData } from "remix";
 import styles from "~/styles/index.css";
 import { request } from "~/lib/datocms";
+import { Image } from "react-datocms";
 import { responsiveImageFragment } from "~/lib/fragments";
 import { Avatar, links as avatarLinks } from "~/components/Avatar";
 import { Date, links as dateLinks } from "~/components/Date";
@@ -56,11 +57,9 @@ export default function Index() {
         </div>
       </section>
       <section className="section">
-        <img
+        <Image
           className="grid__image"
-          srcSet={firstPost.coverImage.responsiveImage.srcSet}
-          sizes={firstPost.coverImage.responsiveImage.sizes}
-          src={firstPost.coverImage.responsiveImage.src}
+          data={firstPost.coverImage.responsiveImage}
         />
         <Link to={`/posts/${firstPost.slug}`}>
           <h5 className="grid__title">{firstPost.title}</h5>
@@ -78,11 +77,9 @@ export default function Index() {
             <li key={post.slug} className="grid__item">
               <Link to={`/posts/${post.slug}`} className="grid__link">
                 <div>
-                  <img
+                  <Image
                     className="grid__image"
-                    srcSet={post.coverImage.responsiveImage.srcSet}
-                    sizes={post.coverImage.responsiveImage.sizes}
-                    src={post.coverImage.responsiveImage.src}
+                    data={post.coverImage.responsiveImage}
                   />
                   <p className="grid__title">{post.title}</p>
                   <Date dateString={post.date} />

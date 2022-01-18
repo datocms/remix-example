@@ -5,7 +5,9 @@ module.exports = {
   appDirectory: "app",
   assetsBuildDirectory: "public/build",
   publicPath: "/build/",
-  serverBuildDirectory: "netlify/functions/server/build",
+  serverBuildDirectory: process.env.VERCEL
+    ? "api/_build"
+    : "netlify/functions/server/build",
   devServerPort: 8002,
-  ignoredRouteFiles: [".*"]
+  ignoredRouteFiles: [".*"],
 };

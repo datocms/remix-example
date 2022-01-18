@@ -16,9 +16,7 @@ Have a look at the end result live:
 
 1. [Create an account on DatoCMS](https://datocms.com).
 
-2. Make sure that you have set up the [Github integration on Vercel](https://vercel.com/docs/git/vercel-for-github).
-
-3. Let DatoCMS set everything up for you clicking this button:
+2. Let DatoCMS set everything up for you clicking this button:
 
 [![Deploy with DatoCMS](https://dashboard.datocms.com/deploy/button.svg)](https://dashboard.datocms.com/deploy?repo=datocms/remix-example)
 

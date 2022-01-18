@@ -4,14 +4,16 @@
   "license": "MIT",
   "scripts": {
     "build": "remix build",
-    "dev": "cross-env NODE_ENV=development netlify dev",
+    "dev": "node -r dotenv/config node_modules/.bin/remix dev",
     "postinstall": "remix setup node",
+    "netlifydev": "cross-env NODE_ENV=development netlify dev",
     "start": "remix-serve build"
   },
   "dependencies": {
     "@remix-run/netlify": "^1.1.1",
     "@remix-run/react": "^1.1.1",
     "@remix-run/serve": "^1.1.1",
+    "@remix-run/vercel": "^1.1.1",
     "date-fns": "^2.28.0",
     "dotenv": "^14.1.0",
     "react": "^17.0.2",

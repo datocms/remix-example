@@ -6,7 +6,7 @@ import { request } from "~/lib/datocms";
 import { responsiveImageFragment, metaTagsFragment } from "~/lib/fragments";
 import { Avatar, links as avatarLinks } from "~/components/Avatar";
 import { Date, links as dateLinks } from "~/components/Date";
-import { StructuredText, Image } from "react-datocms";
+import { StructuredText, Image, toRemixMeta } from "react-datocms";
 
 export function links() {
   return [
@@ -21,69 +21,64 @@ export const loader = async ({ params }) => {
 
   const graphqlRequest = {
     query: `
-        query PostBySlug($slug: String) {
-        site: _site {
-            favicon: faviconMetaTags {
-              ...metaTagsFragment
-            }
+      query PostBySlug($slug: String) {
+        post(filter: {slug: {eq: $slug}}) {
+          seo: _seoMetaTags {
+            ...metaTagsFragment
           }
-          post(filter: {slug: {eq: $slug}}) {
-            seo: _seoMetaTags {
-              ...metaTagsFragment
-            }
-            title
-            slug
-            content {
-              value
-              blocks {
-                __typename
-                ...on ImageBlockRecord {
-                  id
-                  image {
-                    responsiveImage(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 }) {
-                      ...responsiveImageFragment
-                    }
+          title
+          slug
+          content {
+            value
+            blocks {
+              __typename
+              ...on ImageBlockRecord {
+                id
+                image {
+                  responsiveImage(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 }) {
+                    ...responsiveImageFragment
                   }
                 }
               }
             }
-            date
-            ogImage: coverImage{
-              url(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 })
-            }
-            coverImage {
-              responsiveImage(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 }) {
-                ...responsiveImageFragment
-              }
-            }
-            author {
-              name
-              picture {
-                url(imgixParams: {fm: jpg, fit: crop, w: 100, h: 100, sat: -100})
-              }
+          }
+          date
+          ogImage: coverImage{
+            url(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 })
+          }
+          coverImage {
+            responsiveImage(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 }) {
+              ...responsiveImageFragment
             }
           }
-          morePosts: allPosts(orderBy: date_DESC, first: 2, filter: {slug: {neq: $slug}}) {
-            title
-            slug
-            excerpt
-            date
-            coverImage {
-              responsiveImage(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 }) {
-                ...responsiveImageFragment
-              }
-            }
-            author {
-              name
-              picture {
-                url(imgixParams: {fm: jpg, fit: crop, w: 100, h: 100, sat: -100})
-              }
+          author {
+            name
+            picture {
+              url(imgixParams: {fm: jpg, fit: crop, w: 100, h: 100, sat: -100})
             }
           }
         }
-        ${responsiveImageFragment}
-        ${metaTagsFragment}
-      `,
+        morePosts: allPosts(orderBy: date_DESC, first: 2, filter: {slug: {neq: $slug}}) {
+          title
+          slug
+          excerpt
+          date
+          coverImage {
+            responsiveImage(imgixParams: {fm: jpg, fit: crop, w: 2000, h: 1000 }) {
+              ...responsiveImageFragment
+            }
+          }
+          author {
+            name
+            picture {
+              url(imgixParams: {fm: jpg, fit: crop, w: 100, h: 100, sat: -100})
+            }
+          }
+        }
+      }
+      ${responsiveImageFragment}
+      ${metaTagsFragment}
+    `,
     variables: {
       slug: params.slug,
     },
@@ -92,23 +87,8 @@ export const loader = async ({ params }) => {
   return request(graphqlRequest);
 };
 
-export const meta = ({ data }) => {
-  const { post, site } = data;
-  const metaTags = post.seo.concat(site.favicon);
-
-  return metaTags.reduce((acc, tag) => {
-    if (!tag.attributes) {
-      return {
-        ...acc,
-        [tag.tag]: tag.content,
-      };
-    }
-
-    return {
-      ...acc,
-      [tag.attributes.property || tag.attributes.name]: tag.attributes.content,
-    };
-  }, {});
+export const meta = ({ data: { post } }) => {
+  return toRemixMeta(post.seo);
 };
 
 export default function PostSlug() {

@@ -1,22 +1,23 @@
-import { Link } from "remix";
-import { useLoaderData } from "remix";
-import styles from "~/styles/index.css";
-import { request } from "~/lib/datocms";
-import { Image } from "react-datocms";
-import { responsiveImageFragment } from "~/lib/fragments";
-import { Avatar, links as avatarLinks } from "~/components/Avatar";
-import { Date, links as dateLinks } from "~/components/Date";
+import { Link } from 'remix';
+import { useLoaderData } from 'remix';
+import styles from '~/styles/index.css';
+import { request } from '~/lib/datocms';
+import { Image } from 'react-datocms';
+import { responsiveImageFragment } from '~/lib/fragments';
+import { Avatar, links as avatarLinks } from '~/components/Avatar';
+import { Date, links as dateLinks } from '~/components/Date';
 
 export function links() {
   return [
     ...avatarLinks(),
     ...dateLinks(),
-    { rel: "stylesheet", href: styles },
+    { rel: 'stylesheet', href: styles },
   ];
 }
 
-const graphqlRequest = {
-  query: `
+export const loader = () => {
+  return request({
+    query: `
       {
         posts: allPosts(orderBy: date_DESC, first: 20) {
           title
@@ -38,15 +39,13 @@ const graphqlRequest = {
       }
       ${responsiveImageFragment}
     `,
-};
-
-export const loader = () => {
-  return request(graphqlRequest);
+  });
 };
 
 export default function Index() {
-  const { posts } = useLoaderData();
-  const firstPost = posts[0];
+  const {
+    posts: [firstPost, ...otherPosts],
+  } = useLoaderData();
 
   return (
     <div className="container">
@@ -73,7 +72,7 @@ export default function Index() {
       </section>
       <section className="section">
         <ul className="grid">
-          {posts.map((post) => (
+          {otherPosts.map((post) => (
             <li key={post.slug} className="grid__item">
               <Link to={`/posts/${post.slug}`} className="grid__link">
                 <div>

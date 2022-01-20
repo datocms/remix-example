@@ -6,40 +6,42 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-} from "remix";
-import { renderMetaTags } from "react-datocms";
-import styles from "~/styles/global.css";
-import { metaTagsFragment } from "~/lib/fragments";
-import { request } from "~/lib/datocms";
+} from 'remix';
+import { renderMetaTags, toRemixMeta } from 'react-datocms';
+import styles from '~/styles/global.css';
+import { metaTagsFragment } from '~/lib/fragments';
+import { request } from '~/lib/datocms';
 
 export function links() {
-  return [{ rel: "stylesheet", href: styles }];
+  return [{ rel: 'stylesheet', href: styles }];
 }
 
-const graphqlRequest = {
-  query: `
-      {
-        site: _site {
-          favicon: faviconMetaTags {
-            ...metaTagsFragment
+export const loader = () => {
+  return request({
+    query: `
+        {
+          site: _site {
+            favicon: faviconMetaTags(variants: [icon, msApplication, appleTouchIcon]) {
+              ...metaTagsFragment
+            }
+          }
+          blog {
+            seo: _seoMetaTags {
+              ...metaTagsFragment
+            }
           }
         }
-        blog {
-          seo: _seoMetaTags {
-            ...metaTagsFragment
-          }
-        }
-      }
-      ${metaTagsFragment}
-    `,
+        ${metaTagsFragment}
+      `,
+  });
 };
 
-export const loader = () => {
-  return request(graphqlRequest);
+export const meta = ({ data: { blog, site } }) => {
+  return toRemixMeta([...blog.seo, ...site.favicon]);
 };
 
 export default function App() {
-  const { blog, site } = useLoaderData();
+  const { site } = useLoaderData();
 
   return (
     <html lang="en">
@@ -47,14 +49,14 @@ export default function App() {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
-        {renderMetaTags(blog.seo.concat(site.favicon))}
         <Links />
+        {renderMetaTags([...site.favicon])}
       </head>
       <body>
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-        {process.env.NODE_ENV === "development" && <LiveReload />}
+        {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
   );

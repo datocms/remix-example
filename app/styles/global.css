@@ -57,3 +57,15 @@ a:hover {
   flex-direction: row;
   align-items: center;
 }
+
+.preview {
+  border-bottom: 1px solid #eaeaea;
+  background: #fafafa;
+  padding: 10px 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.preview a {
+  text-decoration: underline;
+}

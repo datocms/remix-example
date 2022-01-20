@@ -1,25 +1,31 @@
-import { Link } from "remix";
-import { useLoaderData } from "remix";
-import invariant from "tiny-invariant";
-import styles from "~/styles/index.css";
-import { request } from "~/lib/datocms";
-import { responsiveImageFragment, metaTagsFragment } from "~/lib/fragments";
-import { Avatar, links as avatarLinks } from "~/components/Avatar";
-import { Date, links as dateLinks } from "~/components/Date";
-import { StructuredText, Image, toRemixMeta } from "react-datocms";
+import { Link } from 'remix';
+import { useLoaderData } from 'remix';
+import invariant from 'tiny-invariant';
+import styles from '~/styles/index.css';
+import { datoQuerySubscription } from '~/lib/datocms';
+import { responsiveImageFragment, metaTagsFragment } from '~/lib/fragments';
+import { Avatar, links as avatarLinks } from '~/components/Avatar';
+import { Date, links as dateLinks } from '~/components/Date';
+import {
+  StructuredText,
+  Image,
+  toRemixMeta,
+  useQuerySubscription,
+} from 'react-datocms';
 
 export function links() {
   return [
     ...avatarLinks(),
     ...dateLinks(),
-    { rel: "stylesheet", href: styles },
+    { rel: 'stylesheet', href: styles },
   ];
 }
 
-export const loader = async ({ params }) => {
-  invariant(params.slug, "expected params.slug");
+export const loader = async ({ request, params }) => {
+  invariant(params.slug, 'expected params.slug');
 
-  const graphqlRequest = {
+  return datoQuerySubscription({
+    request,
     query: `
       query PostBySlug($slug: String) {
         post(filter: {slug: {eq: $slug}}) {
@@ -82,23 +88,31 @@ export const loader = async ({ params }) => {
     variables: {
       slug: params.slug,
     },
-  };
-
-  return request(graphqlRequest);
+  });
 };
 
-export const meta = ({ data: { post } }) => {
+export const meta = ({
+  data: {
+    datoQuerySubscription: {
+      initialData: { post },
+    },
+  },
+}) => {
   return toRemixMeta(post.seo);
 };
 
 export default function PostSlug() {
-  const { post, morePosts } = useLoaderData();
+  const { datoQuerySubscription } = useLoaderData();
+
+  const {
+    data: { post, morePosts },
+  } = useQuerySubscription(datoQuerySubscription);
 
   return (
     <div className="container">
       <section className="section">
-        <Link to={`/`} className="grid__link">
-          <p className="section__title">Blog.</p>
+        <Link to="/" className="grid__link">
+          <p className="section__title">Remix Blog.</p>
         </Link>
       </section>
       <section className="section">
@@ -116,7 +130,7 @@ export default function PostSlug() {
           <StructuredText
             data={post.content}
             renderBlock={({ record }) => {
-              if (record.__typename === "ImageBlockRecord") {
+              if (record.__typename === 'ImageBlockRecord') {
                 return (
                   <Image
                     className="grid__image"

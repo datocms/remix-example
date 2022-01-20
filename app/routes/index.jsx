@@ -1,8 +1,8 @@
 import { Link } from 'remix';
 import { useLoaderData } from 'remix';
 import styles from '~/styles/index.css';
-import { request } from '~/lib/datocms';
-import { Image } from 'react-datocms';
+import { datoQuerySubscription } from '~/lib/datocms';
+import { Image, useQuerySubscription } from 'react-datocms';
 import { responsiveImageFragment } from '~/lib/fragments';
 import { Avatar, links as avatarLinks } from '~/components/Avatar';
 import { Date, links as dateLinks } from '~/components/Date';
@@ -15,8 +15,9 @@ export function links() {
   ];
 }
 
-export const loader = () => {
-  return request({
+export const loader = ({ request }) => {
+  return datoQuerySubscription({
+    request,
     query: `
       {
         posts: allPosts(orderBy: date_DESC, first: 20) {
@@ -43,9 +44,11 @@ export const loader = () => {
 };
 
 export default function Index() {
+  const { datoQuerySubscription } = useLoaderData();
+
   const {
-    posts: [firstPost, ...otherPosts],
-  } = useLoaderData();
+    data: { posts: [firstPost, ...otherPosts] },
+  } = useQuerySubscription(datoQuerySubscription);
 
   return (
     <div className="container">

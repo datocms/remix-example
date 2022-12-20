@@ -6,5 +6,5 @@
   "deploymentType": "static",
   "buildCommand": "npm run build",
   "datocmsApiTokenEnvName": "DATOCMS_READONLY_TOKEN",
-  "livePreviewUrl": "https://nextjs-demo-bay.vercel.app/"
+  "livePreviewUrl": "https://remix-example-blog.netlify.app/"
 }

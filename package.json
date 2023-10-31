@@ -28,7 +28,7 @@
     "cross-env": "^7.0.3"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "sideEffects": false
 }

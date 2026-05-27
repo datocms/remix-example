@@ -15,7 +15,7 @@ export async function load({ query, variables, preview }) {
   const { body } = await tiny.post({
     url: endpoint,
     headers: {
-      authorization: `Bearer ${process.env.DATOCMS_READONLY_TOKEN}`,
+      authorization: `Bearer ${preview ? process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN : process.env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN}`,
     },
     data: {
       query,
@@ -41,7 +41,7 @@ export async function datoQuerySubscription({ request, ...gqlRequest }) {
           ...gqlRequest,
           preview: true,
           initialData: await load({ ...gqlRequest, preview: true }),
-          token: process.env.DATOCMS_READONLY_TOKEN,
+          token: process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN,
           environment: process.env.DATOCMS_ENVIRONMENT || null,
         }
       : {

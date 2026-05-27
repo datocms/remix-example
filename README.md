@@ -34,7 +34,7 @@ Have a look at the end result live:
 
 In your DatoCMS' project, go to the **Settings** menu at the top and click **API tokens**.
 
-Then click **Read-only API token** and copy the token.
+Copy the `CDA Only (Published)` token and the `CDA Only (Draft)` token.
 
 Next, copy the `.env.example` file in this directory to `.env` (which will be ignored by Git):
 
@@ -44,12 +44,14 @@ cp .env.example .env
 
 Then set each variable on `.env`:
 
-- `DATOCMS_READONLY_TOKEN` should be the API token you just copied.
+- `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` should be the `CDA Only (Published)` token.
+- `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` should be the `CDA Only (Draft)` token.
 
 Your `.env` file should look like this:
 
 ```bash
-DATOCMS_READONLY_TOKEN=
+DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN=
+DATOCMS_DRAFT_CONTENT_CDA_TOKEN=
 ```
 
 From your terminal:

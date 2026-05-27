@@ -5,6 +5,15 @@
   "datocmsProjectId": "23796",
   "deploymentType": "static",
   "buildCommand": "npm run build",
-  "datocmsApiTokenEnvName": "DATOCMS_READONLY_TOKEN",
-  "livePreviewUrl": "https://remix-example-blog.netlify.app/"
+  "livePreviewUrl": "https://remix-example-blog.netlify.app/",
+  "environmentVariables": {
+    "DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN": {
+      "type": "datocmsAccessToken",
+      "tokenName": "CDA Only (Published)"
+    },
+    "DATOCMS_DRAFT_CONTENT_CDA_TOKEN": {
+      "type": "datocmsAccessToken",
+      "tokenName": "CDA Only (Draft)"
+    }
+  }
 }
